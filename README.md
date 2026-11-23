@@ -11,21 +11,13 @@ Everything lives in a single notebook:
 
 | Split | Images | Accuracy |
 |---|---|---|
-| Validation (held-out physical signs from `Train.csv`) | 5,850 | 99.01% |
-| **Official GTSRB test set (`Test.csv`)** | 12,630 | **98.53%** |
+| Validation (held-out physical signs from `Train.csv`) | ~5.9k | _run the notebook_ |
+| **Official GTSRB test set (`Test.csv`)** | 12,630 | _run the notebook_ |
 
-Trained on a Colab T4 GPU (about 10 seconds per epoch). The best epoch, chosen by validation
-accuracy, was epoch 22 of 32. Results can vary by a few tenths of a percent between runs
-because GPU training is not bit-for-bit deterministic.
-
-**Most common mistakes on the test set:** *60 km/h* read as *80 km/h* (32 times), *Beware of
-ice/snow* as *Bicycles crossing* (28), and *Bumpy road* as *Slippery road* (17). These are
-visually similar signs that become hard to tell apart at 32×32 pixels.
-
-> An earlier version of this notebook reported 99.93%. That figure came from a random split of
-> `Train.csv`, in which near-identical frames of the same physical sign ended up in both
-> training and test data, so it overstated real performance. The numbers above use the
-> official test set and a leak-free split.
+> The accuracy figures will be filled in after the notebook is re-run with the corrected
+> evaluation described below. An earlier version reported 99.93%, but that number came from
+> a random split of `Train.csv` in which near-identical frames of the same sign appeared in
+> both training and test data, so it overstated real performance.
 
 ## Dataset
 
@@ -59,7 +51,7 @@ visually similar signs that become hard to tell apart at 32×32 pixels.
    About 487k parameters.
 5. **Training:** Adam (learning rate 1e-3), sparse categorical cross-entropy, batch size 64,
    up to 50 epochs. Early stopping, checkpointing and learning-rate reduction all track
-   `val_accuracy`. Seeds are fixed (`SEED = 42`) for reproducibility.
+   `val_loss`. Seeds are fixed (`SEED = 42`) for reproducibility.
 6. **Evaluation** on the official test set covers accuracy, a per-class report with sign names,
    a confusion matrix, the most common confusions, and a grid of misclassified images.
 
